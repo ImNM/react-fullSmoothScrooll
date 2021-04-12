@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 import styled from 'styled-components'
 import { menuData } from '../data/MenuData'
 import { Button } from './Button'
-
+import {Link as LinkS} from 'react-scroll'
 const DropDownContainer = styled.div`
     position: fixed;
     z-index: 999;
@@ -47,7 +47,7 @@ const DropdownMenu = styled.div`
     }
 
 `
-const DropdownLink = styled(Link)`
+const DropdownLink = styled(LinkS)`
  display:flex;
  align-items:center;
  justify-content: center;
@@ -76,7 +76,7 @@ function Dropdown({isOpen, toggle}) {
             <DropdownWrapper>
                 <DropdownMenu>
                     {menuData.map((item,index)=>(
-                        <DropdownLink to={item.link} key={index}>
+                        <DropdownLink onClick={toggle} to={item.link} key={index} key={index} smooth={true} duration={500} spy={true}  offset={-60} exact='true'>
                             {item.title}
                         </DropdownLink>
                     ))}

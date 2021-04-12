@@ -1,13 +1,15 @@
-import React from 'react'
+import React ,{useState,useEffect}from 'react'
 import styled,{css} from 'styled-components/macro'
-import {Link} from 'react-router-dom'
+import {Link as LinkR} from 'react-router-dom'
+import {Link as LinkS} from 'react-scroll'
 import { menuData } from '../data/MenuData';
 import {Button} from './Button'
 import {FaBars} from 'react-icons/fa'
+import {animateScroll as scroll} from 'react-scroll';
 
 const Nav = styled.nav`
     height :  60px;
-    
+    background : ${({scrollNav})=>(scrollNav? ' #f59c20':'transparent')};
     display:flex;
     justify-content : space-between;
     padding: 1rem 2rem;
@@ -23,14 +25,15 @@ const NavLink = css`
     display: flex ;
     align-items: center;
     padding: 0 1rem;
-    height : 100%auto;
+    height : 100%;
     cursor: pointer;
     text-decoration : none;
 `
 
-const Logo = styled(Link)`
+const Logo = styled(LinkR)`
     ${NavLink}
     color:white;
+    font-size:1.5rem;
 
 `;
 
@@ -62,11 +65,14 @@ const NavMenu = styled.div`
 
 `;
 
-const NavMenuLinks = styled(Link)`
+const NavMenuLinks = styled(LinkS)`
     ${NavLink}
     color:white;
-    
 
+    &.active{
+        
+        border-bottom : 3px solid white;
+    }
 `;
 
 const NavBtn = styled.div`
@@ -81,14 +87,33 @@ const NavBtn = styled.div`
 
 
 function Navbar({toggle}) {
+    const [scrollNav, setscrollNav] = useState(false)
+
+    const changeNav = () => {
+        if(window.scrollY >= 80){
+            setscrollNav(true);
+        }
+        else{
+            setscrollNav(false);
+        }
+    }
+
+    useEffect(() => {
+        window.addEventListener('scroll',changeNav);
+    }, [])
+
+    const toggleHome = () =>{
+        scroll.scrollToTop();
+    }
+    
     console.log(menuData)
     return (
-        <Nav>
-            <Logo to='/'>ImNM</Logo>
+        <Nav scrollNav={scrollNav}>
+            <Logo to='/' onClick = {toggleHome}>ImNM</Logo>
             <MenuBars onClick={toggle}/>
             <NavMenu>
                 {menuData.map((item,index)=>(
-                    <NavMenuLinks to={item.link} key={index}>
+                    <NavMenuLinks to={item.link} key={index} smooth={true} duration={500} spy={true}  offset={-60} exact='true' >
                         {item.title}
                     </NavMenuLinks>
                 ))}
